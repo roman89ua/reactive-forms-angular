@@ -1,49 +1,94 @@
 <div class="container">
-  <form class="card">
+  <form class="card" [formGroup]="form" (ngSubmit)="submit()">
     <h1>Angular Forms</h1>
 
     <div class="form-control">
       <label>Email</label>
-      <input type="text" placeholder="Email">
-      <div class="validation"></div>
+      <label>
+        <input type="text" placeholder="Email" formControlName="email">
+<!--        {{form.get('email').errors | json}}-->
+      </label>
+      <div class="validation" *ngIf="form.get('email').invalid && form.get('email').touched">
+        <small *ngIf="form.get('email').errors.required">
+          Email field required
+        </small>
+        <small *ngIf="form.get('email').errors.email">
+          Set correct email value
+        </small>
+      </div>
     </div>
 
     <div class="form-control">
-      <label>Пароль</label>
-      <input type="password" placeholder="Пароль">
-      <div class="validation"></div>
-    </div>
+      <label>Password</label>
 
-    <div class="card">
-      <h2>Адрес</h2>
-
-      <div class="form-control">
-        <label>Страна</label>
-
-        <select>
-          <option value="ru">Россия</option>
-          <option value="ua">Украина</option>
-          <option value="by">Беларусь</option>
-        </select>
-      </div>
-
-      <div class="form-control">
-        <input type="text">
-      </div>
-
-      <button class="btn">Выбрать столицу</button>
-    </div>
-
-    <div class="card">
-      <h2>Ваши навыки</h2>
-      <button class="btn">Добавить умение</button>
-      <div class="form-control">
-        <label></label>
-        <input type="text">
+      <label>
+        <input type="password" placeholder="Password" formControlName="password">
+      </label>
+<!--      {{form.get('password').errors | json}}-->
+      <div
+        class="validation"
+        *ngIf="form.get('password').invalid && form.get('password').touched"
+      >
+        <small *ngIf="form.get('password').errors.required">
+          Password required
+        </small>
+        <small *ngIf="form.get('password').errors.minlength">
+          Password too short. Length of password suppose to be {{form.get('password').errors.minlength.requiredLength}} or more,
+           but you have {{form.get('password').errors.minlength.actualLength}}
+        </small>
+        <small *ngIf="form.get('password').errors.maxlength">
+          Password too long. It suppose to be less then {{form.get('password').errors.maxlength.requiredLength}} or equal,
+          but you have {{form.get('password').errors.maxlength.actualLength}}
+        </small>
       </div>
     </div>
 
-    <button class="btn">Отправить</button>
+    <div class="card" formGroupName="address" >
+      <h2>Address</h2>
+
+      <div class="form-control">
+        <label>Country</label>
+
+        <label>
+          <select formControlName="country">
+            <option value="ua">Ukraine</option>
+            <option value="by">Belarus</option>
+            <option value="ru">Russia</option>
+            <option value="us">USA</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="form-control">
+        <Label>City</Label>
+        <label>
+          <input type="text" formControlName="city" placeholder="City">
+        </label>
+      </div>
+
+      <button class="btn" type="button" (click)="setCapital()">Pick a capital</button>
+    </div>
+
+    <div class="card" formGroupName="skills">
+      <h2>Your skills</h2>
+      <button
+        class="btn"
+        type="button"
+        (click)="addSkill()"
+      >Add skill</button>
+      <div
+        class="form-control"
+        *ngFor="let cont of form.get('skills').controls; let ind = index"
+
+      >
+        <label>Skill #{{ind+1}}</label>
+        <label>
+          <input type="text" [formControlName]="ind">
+        </label>
+      </div>
+    </div>
+
+    <button class="btn" type="submit" [disabled]="form.invalid">Submit</button>
 
   </form>
 </div>
