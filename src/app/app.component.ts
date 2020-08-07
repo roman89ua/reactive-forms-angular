@@ -39,8 +39,13 @@ export class AppComponent implements OnInit{
     });
   }
   submit(): void{
-    console.log('Form submitted: ', this.form);
-    console.log('Form data: ', this.form.value);
+    if (this.form.valid){
+      console.log('Form submitted: ', this.form);
+      const formData = {...this.form.value};
+      console.log('Form data: ', formData);
+      this.form.reset();
+    }
+
   }
 
   setCapital(): void {
